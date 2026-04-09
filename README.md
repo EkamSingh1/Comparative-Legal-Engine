@@ -6,3 +6,6 @@ source .venv/bin/activate
 
 # Activate (Windows Command Prompt)
 .venv\Scripts\activate
+
+# Install requirements
+pip install -r requirements.txt
