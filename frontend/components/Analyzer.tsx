@@ -1,8 +1,10 @@
 "use client";
 
-import Image from "next/image";
+import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { HeaderNav } from "@/components/HeaderNav";
 import { analyzeScenario, fetchHealth } from "@/lib/api";
+import { sourceAnchorId } from "@/lib/bibliography-shared";
 import type { AnalysisResponse, HealthResponse, SchoolAnalysis, SchoolKey } from "@/lib/types";
 
 const SAMPLE_SCENARIOS = [
@@ -38,6 +40,33 @@ const SOURCE_WEIGHTS: Record<SchoolKey, { label: string; weight: number }[]> = {
     { label: "Ijma", weight: 52 },
     { label: "Qiyas", weight: 12 }
   ]
+};
+
+const SOURCE_CONTEXT: Record<SchoolKey, Record<string, string>> = {
+  hanafi: {
+    Quran: "Supreme and controlling source.",
+    Hadith: "Prioritizes mutawatir and highly reliable reports, with strong emphasis on Sahih Bukhari.",
+    Qiyas: "Widely used to extend rulings from clear textual anchors.",
+    Istihsan: "Used when strict analogy harms equity, practicality, or public interest.",
+    Ijma: "Relies on established Hanafi juristic consensus, including the Fatawa 'Alamgiri tradition."
+  },
+  maliki: {
+    Quran: "Supreme and controlling source.",
+    Medina: "Treats the early practice of Medina (Amal) as highly authoritative legal evidence.",
+    Ijma: "Focuses on early communal consensus, especially where Medinan practice is stable.",
+    Qiyas: "Accepted, but only when it does not conflict with established Medinan practice."
+  },
+  shafii: {
+    Quran: "Supreme and controlling source.",
+    Hadith: "Sahih hadith controls the ruling, with particular emphasis on Sahih Bukhari.",
+    Qiyas: "Used narrowly and only where clear textual evidence is absent."
+  },
+  hanbali: {
+    Quran: "Supreme and controlling source.",
+    Hadith: "Strongly prioritizes transmitted reports, including Musnad Ahmad Bin Hanbal.",
+    Ijma: "Centers on consensus of the companions and earliest generations.",
+    Qiyas: "Minimized in favor of direct textual and report-based evidence."
+  }
 };
 
 export function Analyzer() {
@@ -85,7 +114,6 @@ export function Analyzer() {
       <header className="border-b border-ink/15 bg-vellum">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="section-kicker">Educational RAG prototype</p>
             <h1 className="font-serif text-4xl font-semibold leading-tight md:text-5xl">
               Comparative Legal Engine
             </h1>
@@ -94,13 +122,16 @@ export function Analyzer() {
               methodologies can produce different educational outcomes from the same facts.
             </p>
           </div>
-          <div className="status-strip" aria-live="polite">
-            <span className={health?.gemini_api_key_configured ? "status-dot ok" : "status-dot warn"} />
-            <span>
-              {health?.gemini_api_key_configured
-                ? `RAG store: ${health.file_search_store}`
-                : "Backend key not configured"}
-            </span>
+          <div className="header-side">
+            <HeaderNav activePage="analyzer" />
+            <div className="status-strip" aria-live="polite">
+              <span className={health?.gemini_api_key_configured ? "status-dot ok" : "status-dot warn"} />
+              <span>
+                {health?.gemini_api_key_configured
+                  ? `RAG store: ${health.file_search_store}`
+                  : "Backend key not configured"}
+              </span>
+            </div>
           </div>
         </div>
       </header>
@@ -156,14 +187,9 @@ export function Analyzer() {
         </section>
 
         <aside className="method-panel">
-          <Image
-            src="/source-lattice.svg"
-            alt="Abstract layered source hierarchy"
-            width={720}
-            height={360}
-            className="source-asset"
-            priority
-          />
+          <p className="method-intro">
+            Select a school to compare how it prioritizes sources and legal reasoning methods.
+          </p>
           <div className="method-grid">
             {SCHOOL_ORDER.map((schoolKey) => (
               <button
@@ -220,8 +246,11 @@ function SourceWeights({ activeSchool }: { activeSchool: SchoolKey }) {
       {SOURCE_WEIGHTS[activeSchool].map((item) => (
         <div className="weight-row" key={item.label}>
           <span>{item.label}</span>
-          <div className="weight-track">
-            <span style={{ width: `${item.weight}%` }} />
+          <div className="weight-detail">
+            <div className="weight-track">
+              <span style={{ width: `${item.weight}%` }} />
+            </div>
+            <p className="weight-summary">{SOURCE_CONTEXT[activeSchool][item.label]}</p>
           </div>
         </div>
       ))}
@@ -326,7 +355,9 @@ function SchoolDetail({ school }: { school: SchoolAnalysis }) {
         <h3>Source scope</h3>
         <div className="source-pills">
           {school.methodology.source_scope.map((source) => (
-            <span key={source}>{source}</span>
+            <Link key={source} href={`/bibliography#${sourceAnchorId(source)}`}>
+              {source}
+            </Link>
           ))}
         </div>
       </section>
