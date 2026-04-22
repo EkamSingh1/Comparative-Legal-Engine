@@ -121,6 +121,9 @@ export function Analyzer() {
               A structured comparison of how Hanafi, Maliki, Shafi&apos;i, and Hanbali
               methodologies can produce different educational outcomes from the same facts.
             </p>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate">
+              Authors: Assanali Akhtanov, Ekam Singh, Amar Kanakamedala
+            </p>
           </div>
           <div className="header-side">
             <HeaderNav activePage="analyzer" />
