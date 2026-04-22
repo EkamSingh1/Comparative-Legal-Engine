@@ -1,0 +1,28 @@
+<svg width="720" height="360" viewBox="0 0 720 360" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Layered source hierarchy</title>
+  <desc id="desc">Abstract bands and connecting lines representing legal source hierarchies.</desc>
+  <rect width="720" height="360" fill="#fffaf0"/>
+  <path d="M80 80H640" stroke="#171717" stroke-width="3"/>
+  <path d="M130 145H590" stroke="#2f6f73" stroke-width="3"/>
+  <path d="M180 210H540" stroke="#8d2431" stroke-width="3"/>
+  <path d="M230 275H490" stroke="#bb8a2c" stroke-width="3"/>
+  <circle cx="80" cy="80" r="13" fill="#171717"/>
+  <circle cx="640" cy="80" r="13" fill="#171717"/>
+  <circle cx="130" cy="145" r="11" fill="#2f6f73"/>
+  <circle cx="590" cy="145" r="11" fill="#2f6f73"/>
+  <circle cx="180" cy="210" r="11" fill="#8d2431"/>
+  <circle cx="540" cy="210" r="11" fill="#8d2431"/>
+  <circle cx="230" cy="275" r="11" fill="#bb8a2c"/>
+  <circle cx="490" cy="275" r="11" fill="#bb8a2c"/>
+  <path d="M80 80L130 145L180 210L230 275" stroke="#394150" stroke-width="2" stroke-dasharray="8 8"/>
+  <path d="M640 80L590 145L540 210L490 275" stroke="#394150" stroke-width="2" stroke-dasharray="8 8"/>
+  <path d="M360 80V275" stroke="#394150" stroke-width="2" stroke-dasharray="4 10"/>
+  <rect x="305" y="49" width="110" height="42" rx="6" fill="#171717"/>
+  <rect x="285" y="114" width="150" height="42" rx="6" fill="#2f6f73"/>
+  <rect x="300" y="179" width="120" height="42" rx="6" fill="#8d2431"/>
+  <rect x="315" y="244" width="90" height="42" rx="6" fill="#bb8a2c"/>
+  <path d="M336 72H384" stroke="#fffaf0" stroke-width="4" stroke-linecap="round"/>
+  <path d="M326 137H394" stroke="#fffaf0" stroke-width="4" stroke-linecap="round"/>
+  <path d="M333 202H387" stroke="#fffaf0" stroke-width="4" stroke-linecap="round"/>
+  <path d="M342 267H378" stroke="#fffaf0" stroke-width="4" stroke-linecap="round"/>
+</svg>
