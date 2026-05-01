@@ -37,6 +37,26 @@ def normalize_reasoning_label(value: object) -> object:
     return value
 
 
+def filter_qiyas_reasoning_items(value: object) -> object:
+    if not isinstance(value, list):
+        return value
+
+    filtered: list[object] = []
+    for item in value:
+        if isinstance(item, BaseModel):
+            reasoning_type = getattr(item, "reasoning_type", None)
+        elif isinstance(item, dict):
+            reasoning_type = item.get("reasoning_type")
+        else:
+            filtered.append(item)
+            continue
+
+        if normalize_reasoning_label(reasoning_type) == "Qiyas":
+            filtered.append(item)
+
+    return filtered
+
+
 class SchoolKey(str, Enum):
     hanafi = "hanafi"
     maliki = "maliki"
@@ -169,7 +189,7 @@ class HanafiReasoning(BaseModel):
 class HanafiOutput(BaseModel):
     final_ruling: str = Field(description="Concise Hanafi ruling in 2 to 3 sentences.")
     primary_evidence: list[HanafiEvidence]
-    legal_reasoning: list[HanafiReasoning]
+    legal_reasoning: list[HanafiReasoning] = Field(default_factory=list)
 
 
 class MalikiEvidence(BaseModel):
@@ -203,7 +223,12 @@ class MalikiReasoning(BaseModel):
 class MalikiOutput(BaseModel):
     final_ruling: str = Field(description="Concise Maliki ruling in 2 to 3 sentences.")
     primary_evidence: list[MalikiEvidence]
-    legal_reasoning: list[MalikiReasoning]
+    legal_reasoning: list[MalikiReasoning] = Field(default_factory=list)
+
+    @field_validator("legal_reasoning", mode="before")
+    @classmethod
+    def keep_only_qiyas_reasoning(cls, value: object) -> object:
+        return filter_qiyas_reasoning_items(value)
 
 
 class ShafiiEvidence(BaseModel):
@@ -235,7 +260,12 @@ class ShafiiReasoning(BaseModel):
 class ShafiiOutput(BaseModel):
     final_ruling: str = Field(description="Concise Shafi'i ruling in 2 to 3 sentences.")
     primary_evidence: list[ShafiiEvidence]
-    legal_reasoning: list[ShafiiReasoning]
+    legal_reasoning: list[ShafiiReasoning] = Field(default_factory=list)
+
+    @field_validator("legal_reasoning", mode="before")
+    @classmethod
+    def keep_only_qiyas_reasoning(cls, value: object) -> object:
+        return filter_qiyas_reasoning_items(value)
 
 
 class HanbaliEvidence(BaseModel):

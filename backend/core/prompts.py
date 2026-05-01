@@ -9,6 +9,9 @@ Use only the retrieved File Search excerpts from the allowed source documents fo
 Do not invent citations, quotes, page numbers, hadith numbers, verses, or doctrine.
 If retrieved context is thin or indirect, say that clearly in the final ruling and keep the answer cautious.
 Prefer short quotations. Each quote must be directly traceable to retrieved context.
+For legal_reasoning, include only the rational methods permitted by the schema, such as Qiyas or Istihsan.
+Do not put textual adherence, Nass, Quran/Hadith reliance, Ijma, Amal, or Medinan practice in legal_reasoning.
+If no permitted rational method is used, return legal_reasoning as an empty list when that field exists.
 Return only JSON matching the supplied schema.
 """.strip()
 
