@@ -94,7 +94,10 @@ class GeminiService:
 
         async def call_provider(use_schema: bool) -> T:
             response = await self._generate_content_with_retries(
-                model=self.settings.gemini_file_search_model,
+                models=self._model_candidates(
+                    self.settings.gemini_file_search_model,
+                    self.settings.gemini_file_search_fallback_models,
+                ),
                 prompt=prompt,
                 response_model=response_model,
                 store_name=store_name,
@@ -126,7 +129,10 @@ class GeminiService:
     ) -> SynthesisOutput:
         prompt = build_synthesis_prompt(scenario, json.dumps(raw_outputs, indent=2))
         response = await self._generate_content_with_retries(
-            model=self.settings.gemini_synthesis_model,
+            models=self._model_candidates(
+                self.settings.gemini_synthesis_model,
+                self.settings.gemini_synthesis_fallback_models,
+            ),
             prompt=prompt,
             response_model=SynthesisOutput,
             store_name=None,
@@ -165,6 +171,39 @@ class GeminiService:
         )
 
     async def _generate_content_with_retries(
+        self,
+        models: list[str],
+        prompt: str,
+        response_model: type[BaseModel],
+        store_name: str | None,
+        use_schema: bool,
+    ):
+        if not models:
+            raise GeminiServiceError("No Gemini model is configured for this request.")
+
+        last_exc: Exception | None = None
+        for model in models:
+            try:
+                return await self._generate_content_for_model_with_retries(
+                    model=model,
+                    prompt=prompt,
+                    response_model=response_model,
+                    store_name=store_name,
+                    use_schema=use_schema,
+                )
+            except Exception as exc:
+                last_exc = exc
+                if not self._looks_transient_provider_error(exc):
+                    raise
+
+        model_list = ", ".join(models)
+        raise GeminiServiceError(
+            "Gemini provider is temporarily unavailable after retrying "
+            f"model(s): {model_list}. Last provider error: "
+            f"{self._compact_error_message(last_exc)}"
+        )
+
+    async def _generate_content_for_model_with_retries(
         self,
         model: str,
         prompt: str,
@@ -291,6 +330,22 @@ class GeminiService:
             "high demand",
         ]
         return any(needle in message for needle in needles)
+
+    def _model_candidates(self, primary: str, fallbacks: list[str]) -> list[str]:
+        candidates: list[str] = []
+        for model in [primary, *fallbacks]:
+            cleaned = model.strip()
+            if cleaned and cleaned not in candidates:
+                candidates.append(cleaned)
+        return candidates
+
+    def _compact_error_message(self, exc: Exception | None) -> str:
+        if exc is None:
+            return "unknown provider error"
+        message = " ".join(str(exc).split())
+        if len(message) > 500:
+            return f"{message[:497]}..."
+        return message
 
 
 @lru_cache

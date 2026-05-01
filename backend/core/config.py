@@ -48,7 +48,9 @@ class Settings:
     gemini_api_key: str | None
     gemini_file_search_store: str
     gemini_file_search_model: str
+    gemini_file_search_fallback_models: list[str]
     gemini_synthesis_model: str
+    gemini_synthesis_fallback_models: list[str]
     gemini_calls_per_minute: int
     gemini_min_seconds_between_calls: float
     allowed_origins: list[str]
@@ -66,8 +68,14 @@ class Settings:
             gemini_file_search_model=os.getenv(
                 "GEMINI_FILE_SEARCH_MODEL", "gemini-3.1-flash-lite-preview"
             ),
+            gemini_file_search_fallback_models=_csv(
+                os.getenv("GEMINI_FILE_SEARCH_FALLBACK_MODELS"), []
+            ),
             gemini_synthesis_model=os.getenv(
                 "GEMINI_SYNTHESIS_MODEL", "gemini-3.1-flash-lite-preview"
+            ),
+            gemini_synthesis_fallback_models=_csv(
+                os.getenv("GEMINI_SYNTHESIS_FALLBACK_MODELS"), []
             ),
             gemini_calls_per_minute=_int(os.getenv("GEMINI_CALLS_PER_MINUTE"), 12),
             gemini_min_seconds_between_calls=_float(

@@ -26,7 +26,9 @@ def health() -> HealthResponse:
         gemini_api_key_configured=bool(settings.gemini_api_key),
         file_search_store=settings.gemini_file_search_store,
         file_search_model=settings.gemini_file_search_model,
+        file_search_fallback_models=settings.gemini_file_search_fallback_models,
         synthesis_model=settings.gemini_synthesis_model,
+        synthesis_fallback_models=settings.gemini_synthesis_fallback_models,
     )
 
 

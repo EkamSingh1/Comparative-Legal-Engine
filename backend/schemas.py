@@ -143,7 +143,9 @@ class HealthResponse(BaseModel):
     gemini_api_key_configured: bool
     file_search_store: str
     file_search_model: str
+    file_search_fallback_models: list[str] = Field(default_factory=list)
     synthesis_model: str
+    synthesis_fallback_models: list[str] = Field(default_factory=list)
 
 
 class SchoolMetadata(BaseModel):

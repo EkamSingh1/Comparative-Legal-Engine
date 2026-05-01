@@ -45,5 +45,7 @@ export type HealthResponse = {
   gemini_api_key_configured: boolean;
   file_search_store: string;
   file_search_model: string;
+  file_search_fallback_models: string[];
   synthesis_model: string;
+  synthesis_fallback_models: string[];
 };

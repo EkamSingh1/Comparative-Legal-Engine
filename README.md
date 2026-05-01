@@ -85,6 +85,10 @@ Edit `backend/.env` and set:
 ```bash
 GEMINI_API_KEY=your-key
 GEMINI_FILE_SEARCH_STORE=Islamic-Law-Sources
+GEMINI_FILE_SEARCH_MODEL=gemini-3.1-flash-lite-preview
+GEMINI_FILE_SEARCH_FALLBACK_MODELS=
+GEMINI_SYNTHESIS_MODEL=gemini-3.1-flash-lite-preview
+GEMINI_SYNTHESIS_FALLBACK_MODELS=
 ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 ```
 
@@ -166,6 +170,8 @@ One analysis uses five model calls:
 
 The backend defaults to `gemini-3.1-flash-lite-preview` and spaces provider calls by `4.2` seconds with a `12` calls-per-minute cap. Adjust these values in `backend/.env` if your model tier differs.
 
+If a model returns temporary high-demand errors such as `503 UNAVAILABLE`, set comma-separated fallback models in `GEMINI_FILE_SEARCH_FALLBACK_MODELS` and `GEMINI_SYNTHESIS_FALLBACK_MODELS`. The backend retries the primary model first, then tries the configured fallbacks only for transient provider errors.
+
 ## Deployment
 
 ### Backend on Render
@@ -177,6 +183,10 @@ The backend defaults to `gemini-3.1-flash-lite-preview` and spaces provider call
 5. Set environment variables:
    - `GEMINI_API_KEY`
    - `GEMINI_FILE_SEARCH_STORE`
+   - `GEMINI_FILE_SEARCH_MODEL`
+   - `GEMINI_FILE_SEARCH_FALLBACK_MODELS` (optional)
+   - `GEMINI_SYNTHESIS_MODEL`
+   - `GEMINI_SYNTHESIS_FALLBACK_MODELS` (optional)
    - `ALLOWED_ORIGINS=https://your-vercel-domain.vercel.app`
 
 The root `render.yaml` contains the same baseline service definition.

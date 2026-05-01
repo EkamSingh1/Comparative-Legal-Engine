@@ -14,8 +14,12 @@ services:
         value: Islamic-Law-Sources
       - key: GEMINI_FILE_SEARCH_MODEL
         value: gemini-3.1-flash-lite-preview
+      - key: GEMINI_FILE_SEARCH_FALLBACK_MODELS
+        value: ""
       - key: GEMINI_SYNTHESIS_MODEL
         value: gemini-3.1-flash-lite-preview
+      - key: GEMINI_SYNTHESIS_FALLBACK_MODELS
+        value: ""
       - key: GEMINI_CALLS_PER_MINUTE
         value: "12"
       - key: GEMINI_MIN_SECONDS_BETWEEN_CALLS
